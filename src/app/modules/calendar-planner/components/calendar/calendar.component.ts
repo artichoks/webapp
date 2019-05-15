@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CalendarDate} from '../../interfaces/date';
 import {years} from '../../data/years';
 import {Dictionary} from '../../../../core/interfaces/dictionary';
@@ -11,7 +11,7 @@ import {months} from '../../data/months';
 })
 export class CalendarComponent implements OnInit {
   dayNames: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  monthNames: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  // monthNames: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   monthOptions: Dictionary[] = months;
   yearOptions: Dictionary[] = years;
 
@@ -21,7 +21,7 @@ export class CalendarComponent implements OnInit {
 
   monthDates: CalendarDate[][];
 
-  constructor() {
+  constructor(public cd: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -38,52 +38,63 @@ export class CalendarComponent implements OnInit {
 
   createMonth(month: number, year: number): CalendarDate[][] {
     const dates: CalendarDate[][] = [];
-    const firstDayIndex = this.getFirstDayOfMonthIndex(month, year) - 1;
-    const prev = this.getPreviousMonthAndYear(month, year);
-    const next = this.getNextMonthAndYear(month, year);
-    const prevMonthDaysCount = this.getDaysInMonth(prev.month, prev.year);
-    const monthDaysCount = this.getDaysInMonth(month, year);
     let dayNum = 1;
-
     for (let i = 0; i < 6; i++) {
-      const week: CalendarDate[] = [];
+      let week: CalendarDate[] = [];
       if (i === 0) {
-        for (let d = prevMonthDaysCount - firstDayIndex + 1; d <= prevMonthDaysCount; d++) {
-          week.push({day: d, month: prev.month, year: prev.year, otherMonth: true, today: false});
-        }
-        for (let d = 1; d <= 7 - firstDayIndex; d++) {
-          week.push({day: d, month, year, otherMonth: false, today: this.isToday(d, month, year)});
-          dayNum++;
-        }
+        [[...week], dayNum] = this.createFirstWeek(dayNum, month, year);
       } else {
-        for (let d = 0; d < 7; d++) {
-          if (dayNum <= monthDaysCount) {
-            week.push({day: dayNum, month, year, otherMonth: false, today: this.isToday(dayNum, month, year)});
-          } else {
-            week.push({
-              day: dayNum - monthDaysCount,
-              month: next.month,
-              year: next.year,
-              otherMonth: true,
-              today: false
-            });
-          }
-          dayNum++;
-        }
+        [[...week], dayNum] = this.createNotFirstWeek(dayNum, month, year);
       }
       dates.push(week);
     }
-    console.log(dates);
     return dates;
   }
 
+  createFirstWeek(dayNum: number, month: number, year: number): [CalendarDate[], number] {
+    const week = [];
+    const firstDayIndex = this.getFirstDayOfMonthIndex(month, year) - 1;
+    const prev = this.getPreviousMonthAndYear(month, year);
+    const prevMonthDaysCount = this.getDaysInMonth(prev.month, prev.year);
+    for (let d = prevMonthDaysCount - firstDayIndex + 1; d <= prevMonthDaysCount; d++) {
+      week.push({day: d, month: prev.month, year: prev.year, otherMonth: true, today: false});
+    }
+    for (let d = 1; d <= 7 - firstDayIndex; d++) {
+      week.push({day: d, month, year, otherMonth: false, today: this.isToday(d, month, year)});
+      dayNum++;
+    }
+    return [week, dayNum];
+  }
+
+  createNotFirstWeek(dayNum: number, month: number, year: number): [CalendarDate[], number] {
+    const week = [];
+    const next = this.getNextMonthAndYear(month, year);
+    const monthDaysCount = this.getDaysInMonth(month, year);
+    for (let d = 0; d < 7; d++) {
+      if (dayNum <= monthDaysCount) {
+        week.push({day: dayNum, month, year, otherMonth: false, today: this.isToday(dayNum, month, year)});
+      } else {
+        week.push({day: dayNum - monthDaysCount, month: next.month, year: next.year, otherMonth: true, today: false});
+      }
+      dayNum++;
+    }
+    return [week, dayNum];
+  }
+
   isToday(day, month, year): boolean {
-    return this.currentDay === day && this.currentMonth === month && this.currentYear === year;
+    const today = new Date();
+    return today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+  }
+
+  getTodayDate(): number {
+    const today = new Date();
+    return today.getDate();
   }
 
   getFirstDayOfMonthIndex(month: number, year: number) {
-    const day = new Date(year, month, 1);
-    return day.getDay();
+    const date = new Date(year, month, 1);
+    const day = date.getDay();
+    return day === 0 ? 7 : day; // getDay() return 0 for Sunday!
   }
 
   getDaysInMonth(month: number, year: number) {
@@ -99,12 +110,16 @@ export class CalendarComponent implements OnInit {
     return month === 11 ? {month: 0, year: year + 1} : {month: month + 1, year};
   }
 
-  onMonthChange(event) {
-    console.log(event);
+  onMonthChange(value) {
+    this.currentMonth = this.monthOptions.find((element) => value === element.name).id;
+    this.currentDay = this.isToday(this.currentDay, this.currentMonth, this.currentYear) ? this.getTodayDate() : 1;
+    this.monthDates = this.createMonth(this.currentMonth, this.currentYear);
   }
 
-  onYearChange(option) {
-    console.log(option);
+  onYearChange(value) {
+    this.currentYear = +value;
+    this.currentDay = this.isToday(this.currentDay, this.currentMonth, this.currentYear) ? this.getTodayDate() : 1;
+    this.monthDates = this.createMonth(this.currentMonth, this.currentYear);
   }
 
   getDefaultMonthId() {

@@ -1,5 +1,5 @@
 <div class="select is-rounded is-hovered">
-  <select (click)="onClick($event)">
+  <select (click)="!$event.x ? onClick($event.target.value) : null">
     <option *ngFor="let option of options" [selected]="option.id === defaultId">{{option.name}}</option>
   </select>
 </div>
