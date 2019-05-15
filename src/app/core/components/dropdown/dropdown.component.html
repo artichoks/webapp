@@ -1,17 +1,5 @@
-<div class="dropdown is-hoverable">
-  <div class="dropdown-trigger">
-    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-      <span>{{name}}</span>
-      <span class="icon is-small">
-        <i class="fa fa-angle-down"></i>
-      </span>
-    </button>
-  </div>
-  <div class="dropdown-menu" role="menu">
-    <div class="dropdown-content">
-      <a href="#" class="dropdown-item" *ngFor="let option of options">
-        {{option}}
-      </a>
-    </div>
-  </div>
+<div class="select is-rounded is-hovered">
+  <select (click)="onClick($event)">
+    <option *ngFor="let option of options" [selected]="option.id === defaultId">{{option.name}}</option>
+  </select>
 </div>

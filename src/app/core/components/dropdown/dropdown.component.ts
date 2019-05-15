@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Dictionary} from '../../interfaces/dictionary';
 
 @Component({
   selector: 'app-dropdown',
@@ -7,10 +8,17 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class DropdownComponent implements OnInit {
   @Input() options;
-  @Input() name;
+  @Input() defaultId;
+  @Output() onOptionSelected = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
+    console.log('defaultId: ', this.defaultId);
+  }
+
+  onClick(option: Dictionary) {
+    this.onOptionSelected.emit(option);
   }
 }

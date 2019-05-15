@@ -1,0 +1,17 @@
+<app-dropdown [options]="monthOptions" [defaultId]="getDefaultMonthId()" (onOptionSelected)="onMonthChange($event)"></app-dropdown>
+<app-dropdown [options]="yearOptions" [defaultId]="getDefaultYearId()" (onOptionSelected)="onYearChange($event)"></app-dropdown>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th *ngFor="let dayName of dayNames">
+      <span>{{dayName}}</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let week of monthDates">
+    <td *ngFor="let date of week" [ngClass]="{'other-month':date.otherMonth, 'today':date.today}">{{date.day}}</td>
+  </tr>
+  </tbody>
+</table>
