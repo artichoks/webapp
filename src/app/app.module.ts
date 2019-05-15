@@ -1,16 +1,23 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {AppComponent} from './components/app/app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {CalendarPlannerModule} from './modules/calendar-planner/calendar-planner.module';
+import {CommonModule} from '@angular/common';
 
-import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule
+    CommonModule,
+    BrowserModule,
+    AppRoutingModule,
+    CalendarPlannerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

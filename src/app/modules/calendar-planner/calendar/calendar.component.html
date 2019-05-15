@@ -1,0 +1,43 @@
+<app-dropdown [name]="'Month'" [options]="monthNames"></app-dropdown>
+<app-dropdown [name]="'Year'" [options]="yearOptions"></app-dropdown>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th *ngFor="let dayName of dayNames; let begin = first; let end = last">
+      <span>{{dayName}}</span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td *ngFor="let dayName of dayNames">{{dayName}}</td>
+  </tr>
+  </tbody>
+
+  <!--<tbody>-->
+  <!--<tr *ngFor="let week of month.dates; let i = index;">-->
+    <!--<td *ngIf="showWeek" class="ui-datepicker-weeknumber ui-state-disabled">-->
+                                            <!--<span>-->
+                                                <!--{{month.weekNumbers[i]}}-->
+                                            <!--</span>-->
+    <!--</td>-->
+    <!--<td *ngFor="let date of week" [ngClass]="{'ui-datepicker-other-month': date.otherMonth,-->
+                                            <!--'ui-datepicker-current-day':isSelected(date),'ui-datepicker-today':date.today}">-->
+      <!--<ng-container *ngIf="date.otherMonth ? showOtherMonths : true">-->
+        <!--<a class="ui-state-default" *ngIf="date.selectable"-->
+           <!--[ngClass]="{'ui-state-active':isSelected(date), 'ui-state-highlight':date.today}"-->
+           <!--(click)="onDateSelect($event,date)" draggable="false">-->
+          <!--<ng-container *ngIf="!dateTemplate">{{date.day}}</ng-container>-->
+          <!--<ng-container *ngTemplateOutlet="dateTemplate; context: {$implicit: date}"></ng-container>-->
+        <!--</a>-->
+        <!--<span class="ui-state-default ui-state-disabled"-->
+              <!--[ngClass]="{'ui-state-active':isSelected(date), 'ui-state-highlight':date.today}"-->
+              <!--*ngIf="!date.selectable">-->
+                                                    <!--{{date.day}}-->
+                                                <!--</span>-->
+      <!--</ng-container>-->
+    <!--</td>-->
+  <!--</tr>-->
+  <!--</tbody>-->
+</table>
