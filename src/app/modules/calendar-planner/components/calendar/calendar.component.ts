@@ -1,8 +1,5 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CalendarDate} from '../../interfaces/date';
-import {years} from '../../data/years';
-import {Dictionary} from '../../../../core/interfaces/dictionary';
-import {months} from '../../data/months';
 
 @Component({
   selector: 'app-calendar',
@@ -11,22 +8,24 @@ import {months} from '../../data/months';
 })
 export class CalendarComponent implements OnInit {
   dayNames: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  // monthNames: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  monthOptions: Dictionary[] = months;
-  yearOptions: Dictionary[] = years;
+  monthOptions = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  yearOptions = [];
 
   currentDay: number;
   currentMonth: number;
   currentYear: number;
 
+  isActiveModal = false;
+
   monthDates: CalendarDate[][];
 
-  constructor(public cd: ChangeDetectorRef) {
+  constructor() {
   }
 
   ngOnInit() {
     this.initCurrentValues();
-    this.monthDates = this.createMonth(this.currentMonth, this.currentYear);
+    this.createYearOptions();
+    this.createMonth(this.currentMonth, this.currentYear);
   }
 
   initCurrentValues() {
@@ -36,7 +35,13 @@ export class CalendarComponent implements OnInit {
     this.currentYear = date.getFullYear();
   }
 
-  createMonth(month: number, year: number): CalendarDate[][] {
+  createYearOptions() {
+    for (let i = 2000; i <= 2100; i++) {
+      this.yearOptions.push(i);
+    }
+  }
+
+  createMonth(month: number, year: number) {
     const dates: CalendarDate[][] = [];
     let dayNum = 1;
     for (let i = 0; i < 6; i++) {
@@ -48,7 +53,7 @@ export class CalendarComponent implements OnInit {
       }
       dates.push(week);
     }
-    return dates;
+    this.monthDates = dates;
   }
 
   createFirstWeek(dayNum: number, month: number, year: number): [CalendarDate[], number] {
@@ -110,23 +115,30 @@ export class CalendarComponent implements OnInit {
     return month === 11 ? {month: 0, year: year + 1} : {month: month + 1, year};
   }
 
-  onMonthChange(value) {
-    this.currentMonth = this.monthOptions.find((element) => value === element.name).id;
+  onMonthOrYearChange(value, isMonth: boolean) {
+    if (isMonth) {
+      this.currentMonth = +this.monthOptions.findIndex((month) => value === month);
+    } else {
+      this.currentYear = +value;
+    }
     this.currentDay = this.isToday(this.currentDay, this.currentMonth, this.currentYear) ? this.getTodayDate() : 1;
-    this.monthDates = this.createMonth(this.currentMonth, this.currentYear);
+    this.createMonth(this.currentMonth, this.currentYear);
   }
 
-  onYearChange(value) {
-    this.currentYear = +value;
-    this.currentDay = this.isToday(this.currentDay, this.currentMonth, this.currentYear) ? this.getTodayDate() : 1;
-    this.monthDates = this.createMonth(this.currentMonth, this.currentYear);
+  onToday() {
+    this.initCurrentValues();
+    this.createMonth(this.currentMonth, this.currentYear);
+  }
+
+  onDayClick(day) {
+    console.log(day);
   }
 
   getDefaultMonthId() {
-    return this.monthOptions.find((value) => this.currentMonth === value.id).id;
+    return this.monthOptions.findIndex((value, index) => index === this.currentMonth);
   }
 
   getDefaultYearId() {
-    return this.yearOptions.find((value) => this.currentYear === value.name).id;
+    return this.yearOptions.findIndex((value) => this.currentYear === value);
   }
 }

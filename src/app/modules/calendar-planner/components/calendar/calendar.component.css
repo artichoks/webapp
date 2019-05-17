@@ -3,11 +3,18 @@
 }
 
 .today {
-  background-color: mistyrose;
+  background-color: #05d1b2;
+  color: white;
 }
 
-.weekend {
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(255,0,172,0.1) 0%, rgba(0,212,255,1) 100%);
+.selectable {
+  cursor: pointer;
+}
+
+td.selectable:hover {
+  font-weight: bold;
+  color: dimgray;
+  background-color: lavenderblush;
 }
 
 .table_wrapper {
