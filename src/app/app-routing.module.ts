@@ -10,8 +10,13 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: '',
+        path: 'welcom',
         component: CalendarComponent
+      },
+      {
+        path: '',
+        redirectTo: 'welcom',
+        pathMatch: 'full'
       },
       {
         path: 'about',
