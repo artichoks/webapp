@@ -12,7 +12,6 @@
 }
 
 td.selectable:hover {
-  font-weight: bold;
   color: dimgray;
   background-color: lavenderblush;
 }
