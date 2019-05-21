@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Article} from '../models/article.model';
 
 @Component({
   selector: 'app-post-form',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./post-form.component.css']
 })
 export class PostFormComponent implements OnInit {
+  @Input() post: Article;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
+    console.log('post: ', this.post);
   }
 
 }

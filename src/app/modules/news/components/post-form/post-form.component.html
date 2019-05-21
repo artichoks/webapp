@@ -1,10 +1,27 @@
-<div class="container">
-  <div class="columns">
-    <div class="column is-full">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi commodi cum dolor doloribus eaque eius error
-        fugiat inventore ipsam iusto molestiae nam nemo, optio quaerat qui quibusdam repudiandae sequi totam.
-      </p>
-      <hr>
+<div class="card article">
+    <div>
+      <div class="tags level-item is-pulled-right">
+        <span class="tag is-white">{{post.author}}</span>
+        <span class="tag is-primary">{{post.source?.name}}</span>
+        <span class="tag">{{post.publishedAt | date:'fullDate'}}</span>
+      </div>
+    </div>
+  <div class="card-content">
+    <div class="media">
+      <div class="media-center">
+        <img [src]="post.urlToImage" class="author-image"
+             alt="Placeholder image">
+      </div>
+      <div class="media-content has-text-centered">
+        <p class="title is-3 article-title">{{post.title}}</p>
+        <p class="subtitle is-6 article-subtitle">
+          <!--<a href="#">@angela</a> on October 7, 2017-->
+        </p>
+      </div>
+    </div>
+    <div class="content article-body">
+      <h3 class="has-text-centered">{{post.description}}</h3>
+      <p>{{post.content}}</p>
     </div>
   </div>
 </div>
